@@ -294,7 +294,7 @@
 </div>
 
 <script>
-const API_BASE = window.location.origin;  // 代理到同源
+const API_BASE = window.__API_BASE__ || 'https://lawsuit-jewish-antenna-tooth.trycloudflare.com';  // 代理到同源
 
 // ========== 初始化 ==========
 document.getElementById('today-date').textContent = new Date().toLocaleDateString('zh-CN', {
