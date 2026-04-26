@@ -294,7 +294,9 @@
 </div>
 
 <script>
-const API_BASE = window.__API_BASE__ || 'https://lawsuit-jewish-antenna-tooth.trycloudflare.com';  // 代理到同源
+// 自动获取API地址：优先使用URL参数 ?api=... , 然后是window.__API_BASE__, 最后默认用局域网地址
+const urlParams = new URLSearchParams(window.location.search);
+const API_BASE = urlParams.get('api') || window.__API_BASE__ || 'http://192.168.10.104:8003';
 
 // ========== 初始化 ==========
 document.getElementById('today-date').textContent = new Date().toLocaleDateString('zh-CN', {
