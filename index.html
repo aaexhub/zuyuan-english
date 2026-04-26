@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>祖源英语学习</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; margin-bottom: 16px;
+  }
+  .header h1 { font-size: 24px; font-weight: 700; color: #1a73e8; }
+  .header .subtitle { font-size: 13px; color: #888; margin-top: 2px; }
+  .module-badge {
+    background: #e8f0fe; color: #1a73e8; padding: 6px 14px;
+    border-radius: 20px; font-size: 13px; font-weight: 500;
+  }
+  
+  .card {
+    background: #fff; border-radius: 16px; padding: 20px;
+    margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: all 0.2s;
+  }
+  .card-title {
+    font-size: 17px; font-weight: 600; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .icon { font-size: 20px; }
+
+  .tab-bar {
+    display: flex; gap: 0; background: #eef0f4; border-radius: 12px;
+    padding: 3px; margin-bottom: 20px;
+  }
+  .tab-bar button {
+    flex: 1; border: none; background: transparent; padding: 10px;
+    font-size: 14px; font-weight: 500; border-radius: 10px;
+    color: #666; cursor: pointer; transition: all 0.2s;
+  }
+  .tab-bar button.active {
+    background: #fff; color: #1a73e8; box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .grammar-card {
+    background: #fafcff; border: 1px solid #e8edf5; border-radius: 14px;
+    padding: 16px; margin-bottom: 14px;
+  }
+  .grammar-card .sentence {
+    font-size: 16px; color: #1a73e8; font-weight: 600;
+    padding: 10px 14px; background: #e8f0fe; border-radius: 10px;
+    margin-bottom: 12px; line-height: 1.5;
+  }
+  .grammar-card .translation {
+    font-size: 14px; color: #666; margin-bottom: 12px;
+    padding-left: 4px;
+  }
+  .grammar-card table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .grammar-card th {
+    background: #f0f4fb; padding: 8px 6px; text-align: left;
+    font-weight: 600; font-size: 12px; color: #555;
+  }
+  .grammar-card td {
+    padding: 6px; border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  .grammar-card td .pos { color: #888; font-size: 11px; }
+  .grammar-card td .note { color: #666; font-size: 12px; }
+  .card-section { margin-top: 10px; }
+  .card-section h4 {
+    font-size: 13px; color: #1a73e8; margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .card-section ul { list-style: none; font-size: 13px; }
+  .card-section li { margin-bottom: 4px; line-height: 1.5; }
+  .card-section li::before { content: "• "; color: #1a73e8; }
+  .mistake { 
+    background: #fff5f5; padding: 8px 12px; border-radius: 8px;
+    margin-bottom: 6px; font-size: 13px;
+  }
+  .mistake .wrong { color: #e74c3c; text-decoration: line-through; }
+  .mistake .arrow { color: #999; margin: 0 8px; }
+  .mistake .correction { color: #27ae60; font-weight: 500; }
+  .pattern-box {
+    background: #f8faff; border-radius: 8px; padding: 8px 12px;
+    margin-bottom: 6px; font-size: 13px;
+  }
+  .pattern-box .label { color: #888; font-size: 11px; margin-right: 6px; }
+  .pattern-box code { 
+    background: #eef2f7; padding: 2px 8px; border-radius: 4px;
+    font-family: 'Menlo', monospace; font-size: 12px;
+  }
+  .mini-exercise {
+    background: #fef9e7; border-left: 3px solid #f39c12;
+    padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 13px;
+    margin-top: 10px;
+  }
+  .collocation {
+    background: #f0faf0; padding: 6px 10px; border-radius: 6px;
+    display: inline-block; margin: 3px; font-size: 12px;
+  }
+
+  .exercise-area { margin-top: 4px; }
+  .exercise-item {
+    background: #fafcff; border: 1px solid #e8edf5;
+    border-radius: 14px; padding: 16px; margin-bottom: 12px;
+  }
+  .exercise-item .prompt {
+    font-size: 15px; font-weight: 500; margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .exercise-item .hint {
+    font-size: 12px; color: #888; margin-bottom: 10px;
+  }
+  .exercise-item textarea {
+    width: 100%; border: 1px solid #ddd; border-radius: 10px;
+    padding: 12px; font-size: 15px; resize: vertical;
+    font-family: inherit; min-height: 60px;
+  }
+  .exercise-item textarea:focus {
+    outline: none; border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1a73e8; color: #fff; border: none;
+    padding: 10px 24px; border-radius: 10px; font-size: 15px;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .btn:hover { background: #1557b0; }
+  .btn:active { transform: scale(0.97); }
+  .btn-outline {
+    background: transparent; color: #1a73e8;
+    border: 1.5px solid #1a73e8;
+  }
+  .btn-outline:hover { background: #e8f0fe; }
+  .btn-green { background: #27ae60; }
+  .btn-green:hover { background: #219a52; }
+
+  .feedback {
+    background: #f0faf0; border: 1px solid #c8e6c9;
+    border-radius: 12px; padding: 14px; margin-top: 10px;
+    display: none;
+  }
+  .feedback.error-feedback {
+    background: #fff8f0;
+    border-color: #ffcc80;
+  }
+  .feedback .reference {
+    font-size: 14px; color: #555; margin-bottom: 8px;
+    padding: 8px 12px; background: #fff; border-radius: 8px;
+  }
+  .feedback .reference strong { color: #1a73e8; }
+  .feedback .praise { 
+    font-size: 14px; color: #27ae60; font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .feedback .error-list { margin-top: 8px; }
+  .feedback .error-item {
+    padding: 6px 10px; background: #fff5f5; border-radius: 6px;
+    margin-bottom: 4px; font-size: 13px;
+  }
+  .feedback .corrected { 
+    margin-top: 8px; padding: 8px 12px; background: #e8f0fe;
+    border-radius: 8px; font-size: 14px;
+  }
+  .feedback .corrected strong { color: #1a73e8; }
+
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 16px;
+  }
+  .stat-box {
+    background: #fff; border-radius: 14px; padding: 16px;
+    text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .stat-box .number {
+    font-size: 28px; font-weight: 700; color: #1a73e8;
+  }
+  .stat-box .label {
+    font-size: 12px; color: #888; margin-top: 4px;
+  }
+  .module-progress {
+    margin-top: 12px;
+  }
+  .module-progress-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+  }
+  .progress-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .progress-dot.done { background: #27ae60; }
+  .progress-dot.current { background: #1a73e8; }
+  .progress-dot.pending { background: #ddd; }
+
+  .loading {
+    text-align: center; padding: 40px; color: #888;
+  }
+  .loading .spinner {
+    width: 32px; height: 32px; border: 3px solid #eee;
+    border-top-color: #1a73e8; border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: #999;
+  }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    .card { padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div>
+      <h1>📘 祖源英语</h1>
+      <div class="subtitle" id="today-date"></div>
+    </div>
+    <div class="module-badge" id="module-badge">加载中…</div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="active" data-tab="grammar" onclick="switchTab('grammar')">📖 语法卡片</button>
+    <button data-tab="practice" onclick="switchTab('practice')">✍️ 句子练习</button>
+    <button data-tab="progress" onclick="switchTab('progress')">📊 学习进度</button>
+  </div>
+
+  <!-- 语法卡片 Tab -->
+  <div id="tab-grammar" class="tab-content">
+    <div id="grammar-cards-area">
+      <div class="loading"><div class="spinner"></div>正在生成语法卡片…</div>
+    </div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="btn btn-outline" onclick="loadGrammarCards()">🔄 换一批卡片</button>
+    </div>
+  </div>
+
+  <!-- 练习 Tab -->
+  <div id="tab-practice" class="tab-content" style="display:none;">
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span> 今日练习</div>
+      <div class="exercise-area" id="exercise-area">
+        <div class="loading"><div class="spinner"></div>正在生成练习题…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 进度 Tab -->
+  <div id="tab-progress" class="tab-content" style="display:none;">
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-box">
+        <div class="number" id="today-count">-</div>
+        <div class="label">今日完成</div>
+      </div>
+      <div class="stat-box">
+        <div class="number" id="today-accuracy">-</div>
+        <div class="label">今日正确率</div>
+      </div>
+      <div class="stat-box">
+        <div class="number" id="total-days">-</div>
+        <div class="label">学习天数</div>
+      </div>
+      <div class="stat-box">
+        <div class="number" id="total-exercises">-</div>
+        <div class="label">总题数</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> 模块进度</div>
+      <div class="module-progress" id="module-progress"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_BASE = window.__API_BASE__ || 'https://lawsuit-jewish-antenna-tooth.trycloudflare.com';
+
+// ========== 初始化 ==========
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('zh-CN', {
+  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+});
+
+let currentModule = null;
+let currentExercises = [];
+let submittedCount = 0;
+
+async function apiGet(path) {
+  const resp = await fetch(`${API_BASE}${path}`);
+  if (!resp.ok) throw new Error(await resp.text());
+  return resp.json();
+}
+
+async function apiPost(path, data) {
+  const resp = await fetch(`${API_BASE}${path}`, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  });
+  if (!resp.ok) throw new Error(await resp.text());
+  return resp.json();
+}
+
+// ========== Tab 切换 ==========
+function switchTab(tab) {
+  document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(d => d.style.display = 'none');
+  document.getElementById(`tab-${tab}`).style.display = 'block';
+  if (tab === 'grammar' && currentModule) loadGrammarCards();
+  if (tab === 'practice' && currentModule) loadExercises();
+  if (tab === 'progress') loadStats();
+}
+
+// ========== 当前模块 ==========
+async function loadCurrentModule() {
+  try {
+    const data = await apiGet('/api/current-module');
+    currentModule = data;
+    const badge = document.getElementById('module-badge');
+    badge.textContent = `M${data.id} ${data.title.split(' ').slice(0,2).join(' ')}`;
+    loadGrammarCards();
+    loadExercises();
+  } catch(e) {
+    console.error('加载模块失败', e);
+  }
+}
+
+// ========== 语法卡片 ==========
+async function loadGrammarCards() {
+  if (!currentModule) return;
+  const area = document.getElementById('grammar-cards-area');
+  area.innerHTML = '<div class="loading"><div class="spinner"></div>正在生成语法卡片…</div>';
+  try {
+    const data = await apiPost('/api/grammar-cards', {module_id: currentModule.id, count: 3});
+    renderGrammarCards(data.cards || []);
+  } catch(e) {
+    area.innerHTML = '<div class="empty-state"><div class="emoji">😅</div>生成失败，请重试</div>';
+  }
+}
+
+function renderGrammarCards(cards) {
+  const area = document.getElementById('grammar-cards-area');
+  if (!cards || cards.length === 0) {
+    area.innerHTML = '<div class="empty-state"><div class="emoji">📝</div>暂无卡片，请先选择模块</div>';
+    return;
+  }
+  let html = '';
+  let idx = 0;
+  let displayed = 0;
+  for (const card of cards) {
+    if (!card || !card.sentence) continue;
+    idx++; displayed++;
+    html += `<div class="grammar-card">
+      <div class="sentence">${escapeHtml(card.sentence)}</div>
+      <div class="translation">${escapeHtml(card.chinese || '')}</div>`;
+
+    // 逐词分析表
+    const analysis = card.word_analysis || [];
+    if (analysis.length > 0) {
+      html += `<table><tr><th>单词/短语</th><th>词性</th><th>成分</th><th>说明</th></tr>`;
+      for (const w of analysis) {
+        html += `<tr><td>${escapeHtml(w.word || '')}</td>
+          <td><span class="pos">${escapeHtml(w.pos || '')}</span></td>
+          <td>${escapeHtml(w.component || '')}</td>
+          <td><span class="note">${escapeHtml(w.note || '')}</span></td></tr>`;
+      }
+      html += `</table>`;
+    }
+
+    // 语法要点
+    const points = card.grammar_points || [];
+    if (points.length > 0) {
+      html += `<div class="card-section"><h4>📌 语法要点</h4><ul>`;
+      for (const p of points) html += `<li>${escapeHtml(p)}</li>`;
+      html += `</ul></div>`;
+    }
+
+    // 句式
+    const patterns = card.sentence_patterns || [];
+    if (patterns.length > 0) {
+      html += `<div class="card-section"><h4>🔄 句式扩展</h4>`;
+      for (const p of patterns) {
+        html += `<div class="pattern-box">
+          <span class="label">${escapeHtml(p.type || '')}:</span>
+          <code>${escapeHtml(p.pattern || '')}</code>
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // 常见错误
+    const mistakes = card.common_mistakes || [];
+    if (mistakes.length > 0) {
+      html += `<div class="card-section"><h4>⚠️ 常见错误</h4>`;
+      for (const m of mistakes) {
+        html += `<div class="mistake">
+          <span class="wrong">${escapeHtml(m.wrong || '')}</span>
+          <span class="arrow">→</span>
+          <span class="correction">${escapeHtml(m.correction || m.correct || '')}</span>
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
+    // 搭配
+    const coll = card.collocations || [];
+    if (coll.length > 0) {
+      html += `<div class="card-section"><h4>📚 搭配</h4>`;
+      for (const c of coll) {
+        html += `<span class="collocation">${escapeHtml(c.phrase || '')}: ${escapeHtml(c.example || '')}</span> `;
+      }
+      html += `</div>`;
+    }
+
+    // 小练习
+    if (card.mini_exercise) {
+      html += `<div class="mini-exercise">🎯 ${escapeHtml(card.mini_exercise)}</div>`;
+    }
+
+    html += `</div>`;
+  }
+  if (displayed === 0) {
+    area.innerHTML = '<div class="empty-state"><div class="emoji">📝</div>暂无卡片内容</div>';
+  } else {
+    area.innerHTML = html;
+  }
+}
+
+// ========== 句子练习 ==========
+async function loadExercises() {
+  if (!currentModule) return;
+  const area = document.getElementById('exercise-area');
+  area.innerHTML = '<div class="loading"><div class="spinner"></div>正在生成练习题…</div>';
+  submittedCount = 0;
+  try {
+    const data = await apiGet(`/api/exercises/${currentModule.id}?count=5`);
+    currentExercises = data.exercises || [];
+    renderExercises();
+  } catch(e) {
+    area.innerHTML = '<div class="empty-state"><div class="emoji">😅</div>生成失败，请重试</div>';
+  }
+}
+
+function renderExercises() {
+  const area = document.getElementById('exercise-area');
+  if (currentExercises.length === 0) {
+    area.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>没有练习，试试其他模块</div>';
+    return;
+  }
+  let html = '';
+  for (let i = 0; i < currentExercises.length; i++) {
+    const ex = currentExercises[i];
+    const diffClass = ex.difficulty === '挑战' ? '🔥' : ex.difficulty === '中等' ? '⭐' : '💡';
+    html += `<div class="exercise-item" id="ex-${i}">
+      <div class="prompt">${escapeHtml(ex.chinese)} <span style="font-size:12px;color:#aaa;font-weight:400;">${diffClass} ${ex.difficulty || '基础'}</span></div>`;
+    if (ex.hint) html += `<div class="hint">💡 ${escapeHtml(ex.hint)}</div>`;
+    html += `<textarea id="answer-${i}" placeholder="在这里写英文翻译…" rows="2"></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <button class="btn" onclick="submitExercise(${i})">✅ 提交批改</button>
+      </div>
+      <div class="feedback" id="feedback-${i}"></div>
+    </div>`;
+  }
+  area.innerHTML = html;
+}
+
+async function submitExercise(index) {
+  const textarea = document.getElementById(`answer-${index}`);
+  const feedback = document.getElementById(`feedback-${index}`);
+  const answer = textarea.value.trim();
+  if (!answer) { alert('请先写句子再提交！'); return; }
+
+  feedback.className = 'feedback';
+  feedback.innerHTML = '<div class="loading"><div class="spinner"></div>AI批改中…</div>';
+  feedback.style.display = 'block';
+
+  const ex = currentExercises[index];
+  try {
+    const result = await apiPost('/api/correct', {
+      module_id: currentModule.id,
+      chinese: ex.chinese,
+      student_answer: answer
+    });
+    renderFeedback(feedback, result);
+    submittedCount++;
+  } catch(e) {
+    feedback.innerHTML = '批改失败，请重试';
+    feedback.style.display = 'block';
+  }
+}
+
+function renderFeedback(el, result) {
+  const isCorrect = result.is_correct;
+  el.className = `feedback ${isCorrect ? '' : 'error-feedback'}`;
+
+  let html = '';
+  if (result.reference) {
+    html += `<div class="reference"><strong>参考答案:</strong> ${escapeHtml(result.reference)}</div>`;
+  }
+  html += `<div class="praise">${isCorrect ? '✅ ' : '💪 '}${escapeHtml(result.praise || '')}</div>`;
+  html += `<div class="corrected"><strong>修改建议:</strong> ${escapeHtml(result.corrected_sentence || '')}</div>`;
+
+  if (result.errors && result.errors.length > 0) {
+    html += `<div class="error-list">`;
+    for (const err of result.errors) {
+      html += `<div class="error-item">
+        <strong>[${escapeHtml(err.type || '')}]</strong> ${escapeHtml(err.detail || '')}
+        ${err.correction ? `<br>→ ${escapeHtml(err.correction)}` : ''}
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+// ========== 学习进度 ==========
+async function loadStats() {
+  try {
+    const data = await apiGet('/api/stats');
+    document.getElementById('today-count').textContent = data.today.total || 0;
+    document.getElementById('today-accuracy').textContent = data.today.total > 0 ? data.today.accuracy + '%' : '-';
+    document.getElementById('total-days').textContent = data.overall.total_study_days || 0;
+    document.getElementById('total-exercises').textContent = data.overall.total_exercises || 0;
+
+    // 模块进度
+    const mp = document.getElementById('module-progress');
+    let html = '';
+    for (const m of data.module_stats) {
+      const dotClass = m.total > 0 && m.accuracy >= 70 ? 'done' : (m.total > 0 ? 'current' : 'pending');
+      html += `<div class="module-progress-item">
+        <span class="progress-dot ${dotClass}"></span>
+        <span>M${m.module_id} ${escapeHtml(m.module_title.split(' ').slice(0,2).join(' '))}</span>
+        <span style="margin-left:auto;color:#888;font-size:12px;">
+          ${m.total}题 / ${m.accuracy}%
+        </span>
+      </div>`;
+    }
+    mp.innerHTML = html || '<div class="empty-state">暂无学习记录</div>';
+  } catch(e) {
+    console.error('加载进度失败', e);
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// ========== 启动 ==========
+loadCurrentModule();
+</script>
+</body>
+</html>
